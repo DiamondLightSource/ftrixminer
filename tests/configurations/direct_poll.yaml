@@ -1,0 +1,18 @@
+type: dls_multiconf.classic
+
+# The xchembku_dataface direct access.
+xchembku_dataface_specification: &XCHEMBKU_DATAFACE_SPECIFICATION
+    type: "xchembku_lib.xchembku_datafaces.direct"
+    database:
+        type: "xchembku_lib.xchembku_databases.normsql"
+        filename: "${output_directory}/xchembku.sqlite"
+        log_level: "WARNING"
+
+# The rockminer direct access.
+rockminer_miner_specification:
+    type: "rockminer_lib.miners.direct_poll"
+    type_specific_tbd:
+        directories:
+            - "${output_directory}/images"
+        recursive: True
+        xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION

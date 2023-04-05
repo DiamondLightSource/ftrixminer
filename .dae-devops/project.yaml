@@ -1,0 +1,23 @@
+# Primary information needed for devops.
+primary:
+    repository_name: rockminer
+    package_name: rockminer_lib
+    one_line_description: "XChem Business Knowledge Unit. Service, Client, API, persistent store."
+    author:
+        name: David Erb
+        email: david.erb@diamond.ac.uk
+    project_urls:
+        GitLab: https://github.com/diamondlightsource/rockminer
+    project_scripts:
+        rockminer: "rockminer_lib.__main__:main"
+        rockminer.cli: "rockminer_cli.main:main"
+    dependencies:
+        - type: pypi
+          list:
+              # PyTDS is a Python library that provides interface to connect to Microsoft SQL Server databases
+              - python-tds
+              - xchembku
+              - dls_servbase
+              - dls_mainiac
+              - dls_multiconf
+              - dls_utilpack

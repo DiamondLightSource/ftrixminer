@@ -12,7 +12,16 @@ xchembku_dataface_specification: &XCHEMBKU_DATAFACE_SPECIFICATION
 rockminer_miner_specification:
     type: "rockminer_lib.miners.direct_poll"
     type_specific_tbd:
-        directories:
-            - "${output_directory}/images"
-        recursive: True
+        mssql:
+            server: dummy
+            database: records1
+            username: na
+            password: na
+            records1:
+                - - 1
+                  - 98ab
+                  - cm00001-1
+                - - 2
+                  - 98ac
+                  - cm00001-1
         xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION

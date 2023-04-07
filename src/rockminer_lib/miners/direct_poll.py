@@ -1,20 +1,18 @@
 import asyncio
-import glob
 import logging
-import os
-import time
 from typing import List
 
+import pytds
 from dls_utilpack.callsign import callsign
 from dls_utilpack.explain import explain2
 from dls_utilpack.require import require
-from PIL import Image
 
 # Dataface client context.
 from xchembku_api.datafaces.context import Context as XchembkuDatafaceClientContext
+from xchembku_api.models.crystal_plate_filter_model import CrystalPlateFilterModel
 
 # Crystal well pydantic model.
-from xchembku_api.models.crystal_well_model import CrystalWellModel
+from xchembku_api.models.crystal_plate_model import CrystalPlateModel
 
 # Base class for miner instances.
 from rockminer_lib.miners.base import Base as MinerBase
@@ -27,8 +25,8 @@ thing_type = "rockminer_lib.miners.direct_poll"
 # ------------------------------------------------------------------------------------------
 class DirectPoll(MinerBase):
     """
-    Object representing an image miner.
-    The behavior is to start a coro task to waken every few seconds and scan for incoming files.
+    Object representing plate miner.
+    The behavior is to start a coro task to waken every few seconds and scan for new plates.
     Files are pushed to xchembku.
     """
 
@@ -41,19 +39,24 @@ class DirectPoll(MinerBase):
         s = f"{callsign(self)} specification", self.specification()
 
         type_specific_tbd = require(s, self.specification(), "type_specific_tbd")
-        self.__directories = require(s, type_specific_tbd, "directories")
-        self.__recursive = require(s, type_specific_tbd, "recursive")
+        self.__mssql = require(s, type_specific_tbd, "mssql")
+        xchembku_dataface_specification = require(
+            s, type_specific_tbd, "xchembku_dataface_specification"
+        )
 
-        # We will use the dataface to discover previously processed files.
-        # We will also discovery newly find files into this database.
-        self.__xchembku_client_context = None
+        # Create a dataface context objectwhere we push new plates discovered.
+        self.__xchembku_client_context = XchembkuDatafaceClientContext(
+            xchembku_dataface_specification
+        )
+
+        # Activate the context later.
         self.__xchembku = None
 
         # This flag will stop the ticking async task.
         self.__keep_ticking = True
         self.__tick_future = None
 
-        self.__known_filenames = []
+        self.__latest_formulatrix__plate__id = 0
 
     # ----------------------------------------------------------------------------------------
     async def activate(self) -> None:
@@ -65,41 +68,26 @@ class DirectPoll(MinerBase):
         Then it starts the coro task to awaken every few seconds to scrape the directories.
         """
 
-        # Make the xchembku client context.
-        s = require(
-            f"{callsign(self)} specification",
-            self.specification(),
-            "type_specific_tbd",
-        )
-        s = require(
-            f"{callsign(self)} type_specific_tbd",
-            s,
-            "xchembku_dataface_specification",
-        )
-        self.__xchembku_client_context = XchembkuDatafaceClientContext(s)
-
         # Activate the context.
         await self.__xchembku_client_context.aenter()
 
         # Get a reference to the xchembku interface provided by the context.
         self.__xchembku = self.__xchembku_client_context.get_interface()
 
-        # Get all the jobs ever done.
-        # TODO: Avoid needing to fetch all rockminer records and matching to all disk files.
-        models: List[
-            CrystalWellModel
-        ] = await self.__xchembku.fetch_crystal_wells_filenames(
-            why="rockminer activate getting all crystal wells ever done"
+        # Get latest plate we already have in the database.
+        # This allows us to query mssql for just plates that are newer.
+        crystal_plate_models = await self.__xchembku.fetch_crystal_plates(
+            CrystalPlateFilterModel(limit=1, direction=-1),
+            why="latest plate we already have in the database",
         )
+        if len(crystal_plate_models) > 0:
+            self.__latest_formulatrix__plate__id = crystal_plate_models[
+                0
+            ].formulatrix__plate__id
 
-        # Make an initial list of the data labels associated with any job.
-        self.__known_filenames = []
-        for model in models:
-            if model.filename not in self.__known_filenames:
-                self.__known_filenames.append(model.filename)
-
-        logger.debug(f"activating with {len(models)} known filenames")
-
+        logger.debug(
+            f"[CPMINP] initial self.__latest_formulatrix__plate__id is {self.__latest_formulatrix__plate__id}"
+        )
         # Poll periodically.
         self.__tick_future = asyncio.get_event_loop().create_task(self.tick())
 
@@ -140,7 +128,7 @@ class DirectPoll(MinerBase):
 
         while self.__keep_ticking:
             try:
-                await self.scrape()
+                await self.discover()
             except Exception as exception:
                 logger.error(explain2(exception, "scraping"), exc_info=exception)
 
@@ -148,106 +136,106 @@ class DirectPoll(MinerBase):
             await asyncio.sleep(1.0)
 
     # ----------------------------------------------------------------------------------------
-    async def scrape(self) -> None:
+    async def discover(self) -> None:
         """
-        Scrape all the configured directories looking for new files.
-        """
-
-        collection: List[CrystalWellModel] = []
-
-        # TODO: Use asyncio tasks to parellize scraping directories.
-        for directory in self.__directories:
-            await self.scrape_directory(directory, collection)
-
-        # Flush any remaining collection to the database.
-        await self.flush_collection(collection)
-
-    # ----------------------------------------------------------------------------------------
-    async def scrape_directory(
-        self,
-        directory: str,
-        collection: List[CrystalWellModel],
-    ) -> None:
-        """
-        Scrape a single directory looking for new files.
-
-        Adds discovered files to internal list which gets pushed when it reaches a configurable size.
-
-        Also add discovered files to internal list of known files to avoid duplicate pushing.
+        Scrape discover new plates in the Formulatrix database.
         """
 
-        if not os.path.isdir(directory):
-            return
+        # Query mssql or dummy.
+        rows = await self.query()
 
-        t0 = time.time()
-        filenames = glob.glob(f"{directory}/**", recursive=self.__recursive)
-        t1 = time.time()
+        logger.debug(f"discovered {len(rows)} rows")
 
-        new_count = 0
-        for filename in filenames:
-            if os.path.isdir(filename):
-                continue
+        # Loop over the rows we got back from the query.
+        for row in rows:
+            formulatrix__plate__id = int(row[0])
+            crystal_plate_model = CrystalPlateModel(
+                barcode=str(row[1]),
+                visit=str(row[2]),
+                formulatrix__plate__id=formulatrix__plate__id,
+            )
 
-            if filename not in self.__known_filenames:
-                # Add image to list of collection.
-                await self.add_discovery(filename, collection)
-                self.__known_filenames.append(filename)
-                new_count = new_count + 1
+            # Add plate to our database.
+            # I don't worry about adding plates one by one with upsert
+            # since new plates don't get added very often.
+            await self.__xchembku.upsert_crystal_plates([crystal_plate_model])
 
-        if new_count >= 0:
-            seconds = "%0.3f" % (t1 - t0)
-            logger.info(
-                f"from {directory} found {new_count} newly actionable files"
-                f" among {len(filenames)} total files in {seconds} seconds"
+            self.__latest_formulatrix__plate__id = formulatrix__plate__id
+
+            logger.debug(
+                f"self.__latest_formulatrix__plate__id is now {self.__latest_formulatrix__plate__id}"
             )
 
     # ----------------------------------------------------------------------------------------
-    async def add_discovery(
-        self,
-        filename: str,
-        collection: List[CrystalWellModel],
-    ) -> None:
+    async def query(self) -> List[List]:
         """
-        Add new discovery for later flush.
+        Read dummy data from configuration.
         """
 
-        if len(collection) >= 1000:
-            await self.flush_collection(collection)
+        server = self.__mssql["server"]
 
-        error = None
-        try:
-            image = Image.open(filename)
-            width, height = image.size
-        except Exception as exception:
-            error = str(exception)
-            width = None
-            height = None
+        if server == "dummy":
+            return await self.query_dummy()
+        else:
+            return await self.query_mssql()
 
-        # Add a new discovery to the collection.
-        collection.append(
-            CrystalWellModel(
-                filename=filename,
-                error=error,
-                width=width,
-                height=height,
-            )
+    # ----------------------------------------------------------------------------------------
+    async def query_mssql(self) -> List[List]:
+        """
+        Scrape discover new plates in the Formulatrix database.
+        """
+
+        # Connect to the RockMaker database at every tick.
+        # TODO: Handle failure to connect to RockMaker database.
+        connection = pytds.connect(
+            self.__mssql["server"],
+            self.__mssql["database"],
+            self.__mssql["username"],
+            self.__mssql["password"],
         )
 
+        # Plate's treenode is "ExperimentPlate".
+        # Parent of ExperimentPlate is "Experiment", aka visit
+        # Parent of Experiment is "Project", aka plate type.
+        # Parent of Project is "ProjectsFolder", we only care about "XChem"
+        # Get all xchem barcodes and the associated experiment name.
+        sql = (
+            "SELECT"
+            " Plate.Barcode AS barcode,"
+            " experiment_node.Name AS visit,"
+            " Plate.ID AS id"
+            " FROM Plate"
+            " JOIN Experiment ON experiment.ID = plate.experimentID"
+            " JOIN TreeNode AS experiment_node ON experiment_node.ID = Experiment.TreeNodeID"
+            " JOIN TreeNode AS plate_type_node ON plate_type_node.ID = experiment_node.ParentID"
+            " JOIN TreeNode AS projects_folder_node ON projects_folder_node.ID = plate_type_node.ParentID"
+            f" WJERE Plate.ID > {self.__latest_formulatrix__plate__id}"
+            " AND projects_folder_node.Name = 'xchem'"
+            " AND plate_type_node.NAME IN ('SWISSci_3drop')"
+        )
+
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+
+        return rows
+
     # ----------------------------------------------------------------------------------------
-    async def flush_collection(self, collection: List[CrystalWellModel]) -> None:
+    async def query_dummy(self) -> List[List]:
         """
-        Send the discovered files to xchembku for storage.
+        Read dummy data from configuration.
         """
 
-        if len(collection) == 0:
-            return
+        database = self.__mssql["database"]
+        records = self.__mssql[database]
 
-        logger.debug(f"flushing {len(collection)} from collection")
+        # Keep only records that haven't been queried before.
+        new_records = []
+        for record in records:
+            if record[0] > self.__latest_formulatrix__plate__id:
+                new_records.append(record)
 
-        # Here we originate the crystal well records into xchembku.
-        await self.__xchembku.originate_crystal_wells(collection)
-
-        collection.clear()
+        return new_records
 
     # ----------------------------------------------------------------------------------------
     async def close_client_session(self):

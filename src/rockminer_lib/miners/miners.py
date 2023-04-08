@@ -5,10 +5,9 @@ from typing import Any, Dict, Optional, Type
 # Class managing list of things.
 from dls_utilpack.things import Things
 
-from rockminer_lib.miners.constants import Types
-
 # Exceptions.
 from rockminer_lib.exceptions import NotFound
+from rockminer_lib.miners.constants import Types
 
 logger = logging.getLogger(__name__)
 
@@ -77,13 +76,10 @@ class Miners(Things):
 
         try:
             # Instantiate the class from the specification dict.
-            miner_object = miner_class(
-                specification, predefined_uuid=predefined_uuid
-            )
+            miner_object = miner_class(specification, predefined_uuid=predefined_uuid)
         except Exception as exception:
             raise RuntimeError(
-                "unable to build miner object of class %s"
-                % (miner_class.__name__)
+                "unable to build miner object of class %s" % (miner_class.__name__)
             ) from exception
 
         return miner_object

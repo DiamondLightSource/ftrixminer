@@ -12,11 +12,11 @@ from dls_utilpack.thing import Thing
 # Base class for an aiohttp server.
 from rockminer_lib.base_aiohttp import BaseAiohttp
 
-# Factory to make a Miner.
-from rockminer_lib.miners.miners import Miners
-
 # Miner protocolj things.
 from rockminer_lib.miners.constants import Commands, Keywords
+
+# Factory to make a Miner.
+from rockminer_lib.miners.miners import Miners
 
 logger = logging.getLogger(__name__)
 
@@ -98,9 +98,7 @@ class Aiohttp(Thing, BaseAiohttp):
         try:
             # Build a local miner for our back-end.
             self.__direct_miner = Miners().build_object(
-                self.specification()["type_specific_tbd"][
-                    "direct_miner_specification"
-                ]
+                self.specification()["type_specific_tbd"]["direct_miner_specification"]
             )
 
             logger.info("[COLSHUT] calling self.__direct_miner.activate()")
@@ -114,9 +112,7 @@ class Aiohttp(Thing, BaseAiohttp):
             logger.info("[COLSHUT] returning")
 
         except Exception as exception:
-            raise RuntimeError(
-                "exception while starting miner server"
-            ) from exception
+            raise RuntimeError("exception while starting miner server") from exception
 
     # ----------------------------------------------------------------------------------------
     async def direct_shutdown(self) -> None:
@@ -135,9 +131,7 @@ class Aiohttp(Thing, BaseAiohttp):
             # Disconnect our local dataface connection, i.e. the one which holds the database connection.
             logger.info("[COLSHUT] awaiting self.__direct_miner.deactivate()")
             await self.__direct_miner.deactivate()
-            logger.info(
-                "[COLSHUT] got return from self.__direct_miner.deactivate()"
-            )
+            logger.info("[COLSHUT] got return from self.__direct_miner.deactivate()")
 
         # ----------------------------------------------
         # Let the base class stop the server listener.

@@ -1,11 +1,11 @@
 import logging
 from typing import Dict
 
-# Things created in the context.
-from rockminer_lib.miners.miners import Miners, miners_set_default
-
 # Base class for an asyncio context.
 from rockminer_lib.contexts.base import Base as ContextBase
+
+# Things created in the context.
+from rockminer_lib.miners.miners import Miners, miners_set_default
 
 logger = logging.getLogger(__name__)
 

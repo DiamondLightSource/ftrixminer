@@ -1,13 +1,10 @@
 import logging
 
-# Things created in the context.
-from rockminer_api.miners.miners import (
-    Miners,
-    rockminer_miners_set_default,
-)
-
 # Base class.
 from rockminer_api.context_base import ContextBase
+
+# Things created in the context.
+from rockminer_api.miners.miners import Miners, rockminer_miners_set_default
 
 logger = logging.getLogger(__name__)
 

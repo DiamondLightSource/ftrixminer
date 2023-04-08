@@ -1,11 +1,11 @@
 # Use standard logging in this module.
 import logging
 
-# Types.
-from rockminer_api.miners.constants import Types
-
 # Exceptions.
 from rockminer_api.exceptions import NotFound
+
+# Types.
+from rockminer_api.miners.constants import Types
 
 # Class managing list of things.
 from rockminer_api.things import Things

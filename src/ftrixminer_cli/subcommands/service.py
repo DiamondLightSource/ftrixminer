@@ -7,10 +7,10 @@ import logging
 from xchembku_api.datafaces.context import Context as XchembkuDatafacesContext
 
 # Base class for cli subcommands.
-from rockminer_cli.subcommands.base import ArgKeywords, Base
+from ftrixminer_cli.subcommands.base import ArgKeywords, Base
 
-# Rockminer context creator.
-from rockminer_lib.miners.context import Context
+# Ftrixminer context creator.
+from ftrixminer_lib.miners.context import Context
 
 logger = logging.getLogger()
 
@@ -43,7 +43,7 @@ class Service(Base):
             configuration["xchembku_dataface_specification"]
         ):
             # Make a service context from the specification in the configuration.
-            context = Context(configuration["rockminer_miner_specification"])
+            context = Context(configuration["ftrixminer_miner_specification"])
 
             # Open the context which starts the service process.
             async with context:

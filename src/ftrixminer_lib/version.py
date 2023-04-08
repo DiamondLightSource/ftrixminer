@@ -5,7 +5,7 @@ import dls_normsql.version
 import dls_servbase_lib.version
 import dls_utilpack.version
 
-import rockminer_lib
+import ftrixminer_lib
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def version():
     Current version.
     """
 
-    return rockminer_lib.__version__
+    return ftrixminer_lib.__version__
 
 
 # ----------------------------------------------------------
@@ -26,7 +26,7 @@ def meta(given_meta=None):
     Adds version information to given meta, if any.
     """
     s = {}
-    s["rockminer_lib"] = version()
+    s["ftrixminer_lib"] = version()
 
     s.update(dls_servbase_lib.version.meta())
     s.update(dls_utilpack.version.meta())

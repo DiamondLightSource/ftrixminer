@@ -2,7 +2,7 @@ import logging
 
 import dls_mainiac_lib.version
 
-import rockminer_lib.version
+import ftrixminer_lib.version
 
 from . import __version__
 
@@ -25,8 +25,8 @@ def meta(given_meta=None):
     Adds version information to given meta, if any.
     """
     s = {}
-    s["rockminer_cli"] = version()
-    s.update(rockminer_lib.version.meta())
+    s["ftrixminer_cli"] = version()
+    s.update(ftrixminer_lib.version.meta())
     s.update(dls_mainiac_lib.version.meta())
 
     if given_meta is not None:

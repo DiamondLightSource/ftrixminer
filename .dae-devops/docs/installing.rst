@@ -1,6 +1,6 @@
 .. # ********** Please don't edit this file!
 .. # ********** It has been generated automatically by dae_devops version 0.5.2.
-.. # ********** For repository_name rockminer
+.. # ********** For repository_name ftrixminer
 
 Installing
 =======================================================================
@@ -27,17 +27,17 @@ installation will not interfere with any existing Python software::
 You can now use ``pip`` to install the library and its dependencies::
 
     $ export PIP_FIND_LINKS=/dls_sw/apps/bxflow/artifacts
-    $ python3 -m pip install rockminer
+    $ python3 -m pip install ftrixminer
 
 If you require a feature that is not currently released you can also install
 from git::
 
-    $ python3 -m pip install git+https://github.com/diamondlightsource/rockminer/rockminer.git
+    $ python3 -m pip install git+https://github.com/diamondlightsource/ftrixminer/ftrixminer.git
 
 The library should now be installed and the commandline interface on your path.
 You can check the version that has been installed by typing::
 
-    $ rockminer --version
-    $ rockminer --version-json
+    $ ftrixminer --version
+    $ ftrixminer --version-json
 
-.. # dae_devops_fingerprint 8fb5b93ba9d765e4b278834a3dc8e819
+.. # dae_devops_fingerprint f5567282cab5f5e2d634019b6dffbbb4

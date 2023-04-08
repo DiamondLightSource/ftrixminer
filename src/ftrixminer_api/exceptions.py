@@ -29,6 +29,6 @@ class ClientConnectorError(RuntimeError):
 
 class Factory:
     def build(qualname):
-        if qualname == "rockminer_api.exceptions.CapacityReached":
+        if qualname == "ftrixminer_api.exceptions.CapacityReached":
             return CapacityReached
         return None

@@ -1,6 +1,6 @@
 .. # ********** Please don't edit this file!
 .. # ********** It has been generated automatically by dae_devops version 0.5.2.
-.. # ********** For repository_name rockminer
+.. # ********** For repository_name ftrixminer
 
 Contributing to the project
 ===========================
@@ -11,7 +11,7 @@ filing a new one. If you have a great idea but it involves big changes, please
 file a ticket before making a pull request! We want to make sure you don't spend
 your time coding something that might not fit the scope of the project.
 
-.. _GitHub: https://github.com/DiamondLightSource/rockminer/issues
+.. _GitHub: https://github.com/DiamondLightSource/ftrixminer/issues
 
 Issue or Discussion?
 --------------------
@@ -20,7 +20,7 @@ Github also offers discussions_ as a place to ask questions and share ideas. If
 your issue is open ended and it is not obvious when it can be "closed", please
 raise it as a discussion instead.
 
-.. _discussions: https://github.com/DiamondLightSource/rockminer/discussions
+.. _discussions: https://github.com/DiamondLightSource/ftrixminer/discussions
 
 Code coverage
 -------------
@@ -36,6 +36,6 @@ The `Developer Guide`_ contains information on setting up a development
 environment, running the tests and what standards the code and documentation
 should follow.
 
-.. _Developer Guide: https://diamondlightsource.github.io/rockminer/main/developer/how-to/contribute.html
+.. _Developer Guide: https://diamondlightsource.github.io/ftrixminer/main/developer/how-to/contribute.html
 
-.. # dae_devops_fingerprint 5e1042e7d5d8715fa3473fc459715c12
+.. # dae_devops_fingerprint e36e2b0ee40831b70e8e68d4f457a313

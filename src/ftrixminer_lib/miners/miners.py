@@ -6,8 +6,8 @@ from typing import Any, Dict, Optional, Type
 from dls_utilpack.things import Things
 
 # Exceptions.
-from rockminer_lib.exceptions import NotFound
-from rockminer_lib.miners.constants import Types
+from ftrixminer_lib.exceptions import NotFound
+from ftrixminer_lib.miners.constants import Types
 
 logger = logging.getLogger(__name__)
 
@@ -103,12 +103,12 @@ class Miners(Things):
         # TODO: Use ABC to declare classes as interfaces with abstract methods.
 
         if class_type == Types.AIOHTTP:
-            from rockminer_lib.miners.aiohttp import Aiohttp
+            from ftrixminer_lib.miners.aiohttp import Aiohttp
 
             return Aiohttp
 
         elif class_type == Types.DIRECT_POLL:
-            from rockminer_lib.miners.direct_poll import DirectPoll
+            from ftrixminer_lib.miners.direct_poll import DirectPoll
 
             return DirectPoll
 

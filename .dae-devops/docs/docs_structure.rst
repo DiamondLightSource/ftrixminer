@@ -1,6 +1,6 @@
 .. # ********** Please don't edit this file!
 .. # ********** It has been generated automatically by dae_devops version 0.5.2.
-.. # ********** For repository_name rockminer
+.. # ********** For repository_name ftrixminer
 
 About the documentation
 -----------------------
@@ -21,4 +21,4 @@ improve most documentation - often immensely.
 
 `More information on this topic. <https://documentation.divio.com>`_
 
-.. # dae_devops_fingerprint 06c79cfc77b770219759f51060230cf5
+.. # dae_devops_fingerprint 4de5bd8320f2378d6dea3bc8f247a916

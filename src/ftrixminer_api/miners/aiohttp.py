@@ -1,10 +1,10 @@
 import logging
 
 # Class for an aiohttp client.
-from rockminer_api.aiohttp_client import AiohttpClient
+from ftrixminer_api.aiohttp_client import AiohttpClient
 
 # Dataface protocolj things.
-from rockminer_api.miners.constants import Commands, Keywords
+from ftrixminer_api.miners.constants import Commands, Keywords
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 # ------------------------------------------------------------------------------------------
 class Aiohttp:
     """
-    Object implementing client side API for talking to the rockminer_miner server.
+    Object implementing client side API for talking to the ftrixminer_miner server.
     Please see doctopic [A01].
     """
 

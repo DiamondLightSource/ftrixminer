@@ -1,6 +1,6 @@
 // ********** Please don't edit this file!
 // ********** It has been generated automatically by dae_devops version 0.5.2.
-// ********** For repository_name rockminer
+// ********** For repository_name ftrixminer
 
 // For format details, see https://containers.dev/implementors/json_reference/
 {
@@ -57,4 +57,4 @@
     "postCreateCommand": "pip install -e .[dev]"
 }
 
-// dae_devops_fingerprint d6f0ac33b6d5dd5ffedf2f5ef6cf6703
+// dae_devops_fingerprint 02c6e3ecb1975551933257205d030bc3

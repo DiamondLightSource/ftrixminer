@@ -8,7 +8,7 @@ import pytds
 from dls_utilpack.explain import explain
 
 # Base class for cli subcommands.
-from rockminer_cli.subcommands.base import ArgKeywords, Base
+from ftrixminer_cli.subcommands.base import ArgKeywords, Base
 
 logger = logging.getLogger()
 
@@ -50,7 +50,7 @@ class Explore1(Base):
         multiconf = self.get_multiconf(vars(self._args))
         configuration = await multiconf.load()
 
-        mssql = configuration["rockminer_mssql"]
+        mssql = configuration["ftrixminer_mssql"]
 
         # connect to the RockMaker database
         self.__connection = pytds.connect(

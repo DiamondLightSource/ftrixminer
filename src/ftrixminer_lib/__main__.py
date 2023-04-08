@@ -1,7 +1,7 @@
 import json
 from argparse import ArgumentParser
 
-from rockminer_lib.version import meta, version
+from ftrixminer_lib.version import meta, version
 
 
 def get_parser():

@@ -1,4 +1,4 @@
-rockminer
+ftrixminer
 =======================================================================
 
 XChem Business Knowledge Unit.  Service, Client, API, persistent store.
@@ -7,11 +7,11 @@ Installation
 -----------------------------------------------------------------------
 ::
 
-    pip install rockminer
+    pip install ftrixminer
 
-    rockminer --version
+    ftrixminer --version
 
-    rockminer.cli --about
+    ftrixminer.cli --about
 
     
 rsync:	
@@ -50,17 +50,17 @@ There may be some clues in the get_barcodes.py script in the imager_pipe directo
 Documentation
 -----------------------------------------------------------------------
 
-See https://www.cs.diamond.ac.uk/rockminer for more detailed documentation.
+See https://www.cs.diamond.ac.uk/ftrixminer for more detailed documentation.
 
 Building and viewing the documents locally::
 
-    git clone git+https://gitlab.diamond.ac.uk/scisoft/bxflow/rockminer.git 
-    cd rockminer
-    virtualenv /scratch/$USER/venv/rockminer
-    source /scratch/$USER/venv/rockminer/bin/activate 
+    git clone git+https://gitlab.diamond.ac.uk/scisoft/bxflow/ftrixminer.git 
+    cd ftrixminer
+    virtualenv /scratch/$USER/venv/ftrixminer
+    source /scratch/$USER/venv/ftrixminer/bin/activate 
     pip install -e .[dev]
-    make -f .rockminer/Makefile validate_docs
-    browse to file:///scratch/$USER/venvs/rockminer/build/html/index.html
+    make -f .ftrixminer/Makefile validate_docs
+    browse to file:///scratch/$USER/venvs/ftrixminer/build/html/index.html
 
 Topics for further documentation:
 

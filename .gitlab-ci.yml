@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 variables:
   # I put the package_pip artifacts int his place just until I can use the corporate internal pipserver.
@@ -87,4 +87,4 @@ package_pip:
 #     # The validate_docs artifacts are in the build/html folder.
 #     - make -f .dae-devops/Makefile publish_docs
 
-# dae_devops_fingerprint 91654306da8fd0e44fc33d299b0f43e9
+# dae_devops_fingerprint b637ed1cb4bee2773c795a802149a4fb

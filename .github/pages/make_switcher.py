@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 import json
 import logging
@@ -102,4 +102,4 @@ def main(args=None):
 if __name__ == "__main__":
     main()
 
-# dae_devops_fingerprint 563529bba1aea054b2f41cc9c4832f87
+# dae_devops_fingerprint 8cf913d22a445ba02c9a2ce4a1731b2b

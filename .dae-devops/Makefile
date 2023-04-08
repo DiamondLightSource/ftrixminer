@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 # ---------------------------------------------------------------------
 # These make targets are designed to be called from the command line and from .gitlab-ci.yml.
@@ -12,7 +12,7 @@ PIP_FIND_LINKS = /dls_sw/apps/bxflow/artifacts
 
 # I got these from https://gitlab.diamond.ac.uk/controls/reports/ci_templates/-/blob/master/defaults.yml.
 # Directory where docs are published.
-DOCS_PUBLISH_ROOT = /dls/cs-www/reports/gitlab-ci/rockminer
+DOCS_PUBLISH_ROOT = /dls/cs-www/reports/gitlab-ci/ftrixminer
 
 # ---------------------------------------------------------------------
 # These are called from the default before_script in the gitlab CI.
@@ -69,4 +69,4 @@ publish_docs:
 	cp -r build/html/* $(DOCS_PUBLISH_ROOT)
 	
 
-# dae_devops_fingerprint 160307be3d2ef2b221ce006d6d9409c6
+# dae_devops_fingerprint 80ed98b1dfd969e974c8ddec3835633f

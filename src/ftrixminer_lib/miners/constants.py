@@ -8,5 +8,5 @@ class Commands:
 
 
 class Types:
-    AIOHTTP = "rockminer_lib.miners.aiohttp"
-    DIRECT_POLL = "rockminer_lib.miners.direct_poll"
+    AIOHTTP = "ftrixminer_lib.miners.aiohttp"
+    DIRECT_POLL = "ftrixminer_lib.miners.direct_poll"

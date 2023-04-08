@@ -4,7 +4,7 @@ import uuid
 from typing import Any, Dict
 
 # Exeptions.
-from rockminer_api.exceptions import NotFound
+from ftrixminer_api.exceptions import NotFound
 
 logger = logging.getLogger()
 

@@ -7,7 +7,7 @@ import logging
 from dls_utilpack.import_class import import_class
 
 # Exceptions.
-from rockminer_api.exceptions import DuplicateUuidException, NotFound
+from ftrixminer_api.exceptions import DuplicateUuidException, NotFound
 
 logger = logging.getLogger(__name__)
 

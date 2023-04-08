@@ -1,6 +1,6 @@
 .. # ********** Please don't edit this file!
 .. # ********** It has been generated automatically by dae_devops version 0.5.2.
-.. # ********** For repository_name rockminer
+.. # ********** For repository_name ftrixminer
 
 Testing
 =======================================================================
@@ -27,7 +27,7 @@ If you want to see more output of the test while it's running you can do:
 
 Each test will write files into its own directory::
 
-    /tmp/rockminer/tests/....
+    /tmp/ftrixminer/tests/....
 
 The tests clear their directory when they start, but not when they finish.
 This allows peeking in there to see what's been written by the test.
@@ -35,4 +35,4 @@ This allows peeking in there to see what's been written by the test.
     
 
 
-.. # dae_devops_fingerprint a61d3627ae61dfebbc191be14309218e
+.. # dae_devops_fingerprint 619f76e29b298f3fd71adaec8d3784dd

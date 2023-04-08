@@ -1,6 +1,6 @@
 .. # ********** Please don't edit this file!
 .. # ********** It has been generated automatically by dae_devops version 0.5.2.
-.. # ********** For repository_name rockminer
+.. # ********** For repository_name ftrixminer
 
 Developing
 =======================================================================
@@ -9,7 +9,7 @@ If you plan to make change to the code in this repository, you can use the steps
 
 Clone the repository::
 
-    $ git clone https://github.com/diamondlightsource/rockminer/rockminer.git
+    $ git clone https://github.com/diamondlightsource/ftrixminer/ftrixminer.git
 
 It is recommended that you install into a virtual environment so this
 installation will not interfere with any existing Python software.
@@ -21,7 +21,7 @@ Make sure to have at least python version 3.9 then::
 
 Install the package in edit mode which will also install all its dependencies::
 
-    $ cd rockminer
+    $ cd ftrixminer
     $ export PIP_FIND_LINKS=/dls_sw/apps/bxflow/artifacts
     $ pip install -e .[dev]
 
@@ -36,4 +36,4 @@ If you plan to modify the docs, you will need to::
     
 
 
-.. # dae_devops_fingerprint 4b69d73bcabeba8af34881e8072d10fb
+.. # dae_devops_fingerprint fb05af49865d3886d05d8679fffc0f7b

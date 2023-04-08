@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 name: Link Check
 
@@ -27,4 +27,4 @@ jobs:
       - name: Check links
         run: tox -e docs build -- -b linkcheck
 
-# dae_devops_fingerprint fe489bc0e8aad017ba134e31163f919d
+# dae_devops_fingerprint 50f688d8120d4f338e770187d6976f1b

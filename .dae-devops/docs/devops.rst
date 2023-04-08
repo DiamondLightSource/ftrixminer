@@ -1,6 +1,6 @@
 .. # ********** Please don't edit this file!
 .. # ********** It has been generated automatically by dae_devops version 0.5.2.
-.. # ********** For repository_name rockminer
+.. # ********** For repository_name ftrixminer
 
 Devops
 =======================================================================
@@ -43,4 +43,4 @@ Publishing::
     
 
 
-.. # dae_devops_fingerprint cbb1b01f3e63e6bf1278232e52c0e7bb
+.. # dae_devops_fingerprint 4cb6062dd10f521b60f3e0840458ee06

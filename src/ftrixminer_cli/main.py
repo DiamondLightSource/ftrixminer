@@ -8,12 +8,12 @@ import multiprocessing
 from dls_mainiac_lib.mainiac import Mainiac
 
 # The subcommands.
-from rockminer_cli.subcommands.explore1 import Explore1
-from rockminer_cli.subcommands.service import Service
+from ftrixminer_cli.subcommands.explore1 import Explore1
+from ftrixminer_cli.subcommands.service import Service
 
 # The package version.
-from rockminer_cli.version import meta as version_meta
-from rockminer_cli.version import version
+from ftrixminer_cli.version import meta as version_meta
+from ftrixminer_cli.version import version
 
 logger = logging.getLogger(__name__)
 
@@ -177,7 +177,7 @@ class _asyncio_logging_filter:
 def main():
 
     # Instantiate the app.
-    main = Main("rockminer_cli")
+    main = Main("ftrixminer_cli")
 
     # Configure the app from command line arguments.
     main.parse_args_and_configure_logging()

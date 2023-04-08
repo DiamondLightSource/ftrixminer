@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 name: Code CI
 
@@ -116,7 +116,7 @@ jobs:
 
       - name: Test module --version works using the installed wheel
         # If more than one module in src/ replace with module name to test
-        run: rockminer --version-json
+        run: ftrixminer --version-json
 
   container:
     needs: [lint, dist, test]
@@ -212,4 +212,4 @@ jobs:
         with:
           password: ${{ secrets.PYPI_TOKEN }}
 
-# dae_devops_fingerprint 3062143757cc1b920c12ff003ca76d5d
+# dae_devops_fingerprint 44fd8d9ac98acf52cb1d6466d65ff9eb

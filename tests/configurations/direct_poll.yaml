@@ -8,9 +8,9 @@ xchembku_dataface_specification: &XCHEMBKU_DATAFACE_SPECIFICATION
         filename: "${output_directory}/xchembku.sqlite"
         log_level: "WARNING"
 
-# The rockminer direct access.
-rockminer_miner_specification:
-    type: "rockminer_lib.miners.direct_poll"
+# The ftrixminer direct access.
+ftrixminer_miner_specification:
+    type: "ftrixminer_lib.miners.direct_poll"
     type_specific_tbd:
         mssql:
             server: dummy

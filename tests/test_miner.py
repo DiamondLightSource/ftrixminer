@@ -8,10 +8,10 @@ from xchembku_api.datafaces.datafaces import xchembku_datafaces_get_default
 from xchembku_api.models.crystal_plate_filter_model import CrystalPlateFilterModel
 
 # Client context creator.
-from rockminer_api.miners.context import Context as MinerClientContext
+from ftrixminer_api.miners.context import Context as MinerClientContext
 
 # Server context creator.
-from rockminer_lib.miners.context import Context as MinerServerContext
+from ftrixminer_lib.miners.context import Context as MinerServerContext
 
 # Base class for the tester.
 from tests.base import Base
@@ -73,7 +73,7 @@ class MinerTester(Base):
             xchembku_dataface_specification
         )
 
-        miner_specification = multiconf_dict["rockminer_miner_specification"]
+        miner_specification = multiconf_dict["ftrixminer_miner_specification"]
         # Make the server context.
         miner_server_context = MinerServerContext(miner_specification)
 

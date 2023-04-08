@@ -10,17 +10,17 @@ from dls_utilpack.require import require
 from dls_utilpack.thing import Thing
 
 # Base class for an aiohttp server.
-from rockminer_lib.base_aiohttp import BaseAiohttp
+from ftrixminer_lib.base_aiohttp import BaseAiohttp
 
 # Miner protocolj things.
-from rockminer_lib.miners.constants import Commands, Keywords
+from ftrixminer_lib.miners.constants import Commands, Keywords
 
 # Factory to make a Miner.
-from rockminer_lib.miners.miners import Miners
+from ftrixminer_lib.miners.miners import Miners
 
 logger = logging.getLogger(__name__)
 
-thing_type = "rockminer_lib.miners.aiohttp"
+thing_type = "ftrixminer_lib.miners.aiohttp"
 
 
 # ------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 name: Docs CI
 
@@ -56,4 +56,4 @@ jobs:
           publish_dir: .github/pages
           keep_files: true
 
-# dae_devops_fingerprint 2dd794462ddaa20c68fec38772053de2
+# dae_devops_fingerprint a68d6d17f62a59dfef1f07f2c9a03c8c

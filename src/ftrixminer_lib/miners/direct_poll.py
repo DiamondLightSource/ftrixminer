@@ -15,11 +15,11 @@ from xchembku_api.models.crystal_plate_filter_model import CrystalPlateFilterMod
 from xchembku_api.models.crystal_plate_model import CrystalPlateModel
 
 # Base class for miner instances.
-from rockminer_lib.miners.base import Base as MinerBase
+from ftrixminer_lib.miners.base import Base as MinerBase
 
 logger = logging.getLogger(__name__)
 
-thing_type = "rockminer_lib.miners.direct_poll"
+thing_type = "ftrixminer_lib.miners.direct_poll"
 
 
 # ------------------------------------------------------------------------------------------

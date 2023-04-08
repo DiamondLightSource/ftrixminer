@@ -1,6 +1,6 @@
 .. # ********** Please don't edit this file!
 .. # ********** It has been generated automatically by dae_devops version 0.5.2.
-.. # ********** For repository_name rockminer
+.. # ********** For repository_name ftrixminer
 
 Naming conventions
 =======================================================================
@@ -31,4 +31,4 @@ repository
     lowercase, hyphens
 
 
-.. # dae_devops_fingerprint 739cbf201739dcc374a0def131952d0c
+.. # dae_devops_fingerprint d2cf0e91455dde1d8a6485ad8955597b

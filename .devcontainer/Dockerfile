@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 # This file is for use as a devcontainer and a runtime container
 #
@@ -37,7 +37,7 @@ COPY --from=build /venv/ /venv/
 ENV PATH=/venv/bin:$PATH
 
 # change this entrypoint if it is not the same as the repo
-ENTRYPOINT ["rockminer"]
+ENTRYPOINT ["ftrixminer"]
 CMD ["--version"]
 
-# dae_devops_fingerprint 7dd282bacffd2c633a2182ff2fd18417
+# dae_devops_fingerprint d58bef0f8a3e7c798b6427f97485c1e2

@@ -15,7 +15,7 @@ logging_settings:
 
 # The external access bits.
 external_access_bits:
-    dataface_port: &ROCKMINER_PORT 27821
+    dataface_port: &FTRIXMINER_PORT 27821
 
 # The xchembku_dataface direct access.
 xchembku_dataface_specification: &XCHEMBKU_DATAFACE_SPECIFICATION
@@ -25,10 +25,10 @@ xchembku_dataface_specification: &XCHEMBKU_DATAFACE_SPECIFICATION
         filename: "${output_directory}/xchembku.sqlite"
         log_level: "WARNING"
 
-# The rockminer direct access.
-rockminer_miner_specification_direct_poll:
-    &ROCKMINER_MINER_SPECIFICATION_DIRECT_POLL
-    type: "rockminer_lib.miners.direct_poll"
+# The ftrixminer direct access.
+ftrixminer_miner_specification_direct_poll:
+    &FTRIXMINER_MINER_SPECIFICATION_DIRECT_POLL
+    type: "ftrixminer_lib.miners.direct_poll"
     type_specific_tbd:
         mssql:
             server: dummy
@@ -44,16 +44,16 @@ rockminer_miner_specification_direct_poll:
                   - cm00001-1
         xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION
 
-# The rockminer client/server composite.
-rockminer_miner_specification:
-    type: "rockminer_lib.miners.aiohttp"
+# The ftrixminer client/server composite.
+ftrixminer_miner_specification:
+    type: "ftrixminer_lib.miners.aiohttp"
     type_specific_tbd:
-        # The remote rockminer server access.
+        # The remote ftrixminer server access.
         aiohttp_specification:
             server_host: "*"
             client_host: "127.0.0.1"
-            port: *ROCKMINER_PORT
-        # The local implementation of the rockminer.
-        direct_miner_specification: *ROCKMINER_MINER_SPECIFICATION_DIRECT_POLL
+            port: *FTRIXMINER_PORT
+        # The local implementation of the ftrixminer.
+        direct_miner_specification: *FTRIXMINER_MINER_SPECIFICATION_DIRECT_POLL
     context:
         start_as: process

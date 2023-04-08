@@ -1,6 +1,6 @@
 # ********** Please don't edit this file!
 # ********** It has been generated automatically by dae_devops version 0.5.2.
-# ********** For repository_name rockminer
+# ********** For repository_name ftrixminer
 
 name: Install requirements
 description: Run pip install with requirements and upload resulting requirements
@@ -61,4 +61,4 @@ runs:
       shell: bash
 
 
-# dae_devops_fingerprint 68749f1627c8649e28768dbc1aa61159
+# dae_devops_fingerprint 9da8f48e446237ddfb48f136fb532f28

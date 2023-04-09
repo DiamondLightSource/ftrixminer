@@ -2,26 +2,28 @@ type: dls_multiconf.classic
 
 # The xchembku_dataface direct access.
 xchembku_dataface_specification: &XCHEMBKU_DATAFACE_SPECIFICATION
-    type: "xchembku_lib.xchembku_datafaces.direct"
-    database:
-        type: "xchembku_lib.xchembku_databases.normsql"
-        filename: "${output_directory}/xchembku.sqlite"
-        log_level: "WARNING"
+  type: "xchembku_lib.xchembku_datafaces.direct"
+  database:
+    type: "xchembku_lib.xchembku_databases.normsql"
+    filename: "${output_directory}/xchembku.sqlite"
+    log_level: "WARNING"
 
 # The ftrixminer direct access.
 ftrixminer_miner_specification:
-    type: "ftrixminer_lib.miners.direct_poll"
-    type_specific_tbd:
-        mssql:
-            server: dummy
-            database: records1
-            username: na
-            password: na
-            records1:
-                - - 1
-                  - 98ab
-                  - cm00001-1
-                - - 2
-                  - 98ac
-                  - cm00001-1
-        xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION
+  type: "ftrixminer_lib.miners.direct_poll"
+  type_specific_tbd:
+    mssql:
+      server: dummy
+      database: records1
+      username: na
+      password: na
+      records1:
+        - - 1
+          - 98ab
+          - cm00001-1
+        - - 2
+          - 98ac
+          - cm00001-1
+    xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION
+  context:
+    start_as: direct

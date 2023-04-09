@@ -144,7 +144,7 @@ class DirectPoll(MinerBase):
         # Query mssql or dummy.
         rows = await self.query()
 
-        logger.debug(f"discovered {len(rows)} rows")
+        logger.debug(f"[FTRIXMINER POLL] discovered {len(rows)} rows")
 
         # Loop over the rows we got back from the query.
         for row in rows:

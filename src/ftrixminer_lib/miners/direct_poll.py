@@ -144,7 +144,7 @@ class DirectPoll(MinerBase):
         # Query mssql or dummy.
         rows = await self.query()
 
-        logger.debug(f"[FTRIXMINER POLL] discovered {len(rows)} rows")
+        logger.debug(f"[FTRIXMINER POLL] discovered {len(rows)} plate rows")
 
         # Loop over the rows we got back from the query.
         for row in rows:
@@ -156,7 +156,7 @@ class DirectPoll(MinerBase):
             )
 
             # Add plate to our database.
-            # I don't worry about adding plates one by one with upsert
+            # I don't worry about performance hit of adding plates one by one with upsert
             # since new plates don't get added very often.
             await self.__xchembku.upsert_crystal_plates([crystal_plate_model])
 

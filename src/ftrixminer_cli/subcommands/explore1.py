@@ -6,6 +6,7 @@ from collections import OrderedDict
 
 import pytds
 from dls_utilpack.explain import explain
+from prettytable import PrettyTable
 
 # Base class for cli subcommands.
 from ftrixminer_cli.subcommands.base import ArgKeywords, Base
@@ -68,6 +69,7 @@ class Explore1(Base):
         records = self.query(
             "SELECT"
             " Plate.ID AS id,"
+            " plate_type_node.Name AS plate_type,"
             " Plate.Barcode AS barcode,"
             " experiment_node.Name AS visit"
             " FROM Plate"
@@ -76,26 +78,31 @@ class Explore1(Base):
             " JOIN TreeNode AS plate_type_node ON plate_type_node.ID = experiment_node.ParentID"
             " JOIN TreeNode AS projects_folder_node ON projects_folder_node.ID = plate_type_node.ParentID"
             " WHERE projects_folder_node.Name = 'xchem'"
-            " AND plate_type_node.NAME IN ('SWISSci_3drop')"
+            " AND plate_type_node.Name IN ('SWISSci_3drop')"
         )
 
+        fields = ["id", "plate_type", "barcode", "visit"]
+        table = PrettyTable(fields)
         for record in records:
-            logger.debug(
-                f"plate {record['id']} barcode {record['barcode']}, visit {record['visit']}"
-            )
-            # logger.debug(
-            #     "%s=%s %s=%s %s=%s %s=%s"
-            #     % (
-            #         row[6],
-            #         row[7],
-            #         row[4],
-            #         row[5],
-            #         row[2],
-            #         row[3],
-            #         row[0],
-            #         row[1],
-            #     )
-            # )
+            values = []
+            for field in fields:
+                values.append(record[field])
+            table.add_row(values)
+        logger.info(f"\n{table.get_string()}")
+
+        # logger.debug(
+        #     "%s=%s %s=%s %s=%s %s=%s"
+        #     % (
+        #         row[6],
+        #         row[7],
+        #         row[4],
+        #         row[5],
+        #         row[2],
+        #         row[3],
+        #         row[0],
+        #         row[1],
+        #     )
+        # )
 
         # Plate's treenode is "ExperimentPlate".
         # Parent of ExperimentPlate is "Experiment".

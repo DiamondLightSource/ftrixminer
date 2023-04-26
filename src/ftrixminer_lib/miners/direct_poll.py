@@ -201,15 +201,15 @@ class DirectPoll(MinerBase):
         # Get all xchem barcodes and the associated experiment name.
         sql = (
             "SELECT"
+            " Plate.ID AS id,"
             " Plate.Barcode AS barcode,"
-            " experiment_node.Name AS visit,"
-            " Plate.ID AS id"
+            " experiment_node.Name AS visit"
             " FROM Plate"
             " JOIN Experiment ON experiment.ID = plate.experimentID"
             " JOIN TreeNode AS experiment_node ON experiment_node.ID = Experiment.TreeNodeID"
             " JOIN TreeNode AS plate_type_node ON plate_type_node.ID = experiment_node.ParentID"
             " JOIN TreeNode AS projects_folder_node ON projects_folder_node.ID = plate_type_node.ParentID"
-            f" WJERE Plate.ID > {self.__latest_formulatrix__plate__id}"
+            f" WHERE Plate.ID > {self.__latest_formulatrix__plate__id}"
             " AND projects_folder_node.Name = 'xchem'"
             " AND plate_type_node.NAME IN ('SWISSci_3drop')"
         )

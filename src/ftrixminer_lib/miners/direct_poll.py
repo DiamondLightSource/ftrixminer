@@ -169,10 +169,6 @@ class DirectPoll(MinerBase):
 
             self.__latest_formulatrix__plate__id = formulatrix__plate__id
 
-            logger.debug(
-                f"self.__latest_formulatrix__plate__id is now {self.__latest_formulatrix__plate__id}"
-            )
-
     # ----------------------------------------------------------------------------------------
     async def query(self) -> List[List]:
         """
@@ -202,7 +198,9 @@ class DirectPoll(MinerBase):
         )
 
         # Select only plate types we care about.
-        treenode_names = list(TREENODE_NAMES_TO_THING_TYPES.keys())
+        treenode_names = [
+            f"'{str(name)}'" for name in list(TREENODE_NAMES_TO_THING_TYPES.keys())
+        ]
 
         # Plate's treenode is "ExperimentPlate".
         # Parent of ExperimentPlate is "Experiment", aka visit
@@ -222,12 +220,11 @@ class DirectPoll(MinerBase):
             " JOIN TreeNode AS projects_folder_node ON projects_folder_node.ID = plate_type_node.ParentID"
             f" WHERE Plate.ID > {self.__latest_formulatrix__plate__id}"
             " AND projects_folder_node.Name = 'xchem'"
-            " AND plate_type_node.Name IN (?)"
+            f" AND plate_type_node.Name IN ({',' .join(treenode_names)})"
         )
-        subs = [treenode_names]
 
         cursor = connection.cursor()
-        cursor.execute(sql, subs)
+        cursor.execute(sql)
         rows = cursor.fetchall()
 
         return rows

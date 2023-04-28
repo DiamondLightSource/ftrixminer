@@ -7,6 +7,9 @@ from dls_utilpack.callsign import callsign
 from dls_utilpack.explain import explain2
 from dls_utilpack.require import require
 
+# Crystal plate constants.
+from xchembku_api.crystal_plate_objects.constants import TREENODE_NAMES_TO_THING_TYPES
+
 # Dataface client context.
 from xchembku_api.datafaces.context import Context as XchembkuDatafaceClientContext
 from xchembku_api.models.crystal_plate_filter_model import CrystalPlateFilterModel
@@ -144,14 +147,18 @@ class DirectPoll(MinerBase):
         # Query mssql or dummy.
         rows = await self.query()
 
-        logger.debug(f"[FTRIXMINER POLL] discovered {len(rows)} plate rows")
+        logger.debug(f"[FTRIXMINER POLL] discovered {len(rows)} new plate rows")
 
         # Loop over the rows we got back from the query.
         for row in rows:
             formulatrix__plate__id = int(row[0])
+            thing_type = TREENODE_NAMES_TO_THING_TYPES.get(row[3])
+            if thing_type is None:
+                raise RuntimeError(f"programming error: plate type {row[3]} unexpected")
             crystal_plate_model = CrystalPlateModel(
                 barcode=str(row[1]),
                 visit=str(row[2]),
+                thing_type=thing_type,
                 formulatrix__plate__id=formulatrix__plate__id,
             )
 
@@ -194,6 +201,9 @@ class DirectPoll(MinerBase):
             self.__mssql["password"],
         )
 
+        # Select only plate types we care about.
+        treenode_names = list(TREENODE_NAMES_TO_THING_TYPES.keys())
+
         # Plate's treenode is "ExperimentPlate".
         # Parent of ExperimentPlate is "Experiment", aka visit
         # Parent of Experiment is "Project", aka plate type.
@@ -203,7 +213,8 @@ class DirectPoll(MinerBase):
             "SELECT"
             " Plate.ID AS id,"
             " Plate.Barcode AS barcode,"
-            " experiment_node.Name AS visit"
+            " experiment_node.Name AS visit,"
+            " plate_type_node.Name AS plate_type"
             " FROM Plate"
             " JOIN Experiment ON experiment.ID = plate.experimentID"
             " JOIN TreeNode AS experiment_node ON experiment_node.ID = Experiment.TreeNodeID"
@@ -211,11 +222,12 @@ class DirectPoll(MinerBase):
             " JOIN TreeNode AS projects_folder_node ON projects_folder_node.ID = plate_type_node.ParentID"
             f" WHERE Plate.ID > {self.__latest_formulatrix__plate__id}"
             " AND projects_folder_node.Name = 'xchem'"
-            " AND plate_type_node.NAME IN ('SWISSci_3drop')"
+            " AND plate_type_node.Name IN (?)"
         )
+        subs = [treenode_names]
 
         cursor = connection.cursor()
-        cursor.execute(sql)
+        cursor.execute(sql, subs)
         rows = cursor.fetchall()
 
         return rows

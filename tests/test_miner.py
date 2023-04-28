@@ -7,6 +7,9 @@ from xchembku_api.datafaces.context import Context as XchembkuDatafaceClientCont
 from xchembku_api.datafaces.datafaces import xchembku_datafaces_get_default
 from xchembku_api.models.crystal_plate_filter_model import CrystalPlateFilterModel
 
+# Crystal plate objects factory.
+from xchembku_lib.crystal_plate_objects.crystal_plate_objects import CrystalPlateObjects
+
 # Client context creator.
 from ftrixminer_api.miners.context import Context as MinerClientContext
 
@@ -108,9 +111,8 @@ class MinerTester(Base):
 
         # Get list of plates before we create any of the mock plates.
         filter = CrystalPlateFilterModel()
-        records = await xchembku.fetch_crystal_plates(filter)
-
-        # assert len(records) == 0, "images before any mock plates"
+        models = await xchembku.fetch_crystal_plates(filter)
+        assert len(models) == 0, "images before any mock plates"
 
         # Wait for all the plates to appear.
         time0 = time.time()
@@ -118,20 +120,25 @@ class MinerTester(Base):
         while True:
 
             # Get all images.
-            records = await xchembku.fetch_crystal_plates(filter)
+            models = await xchembku.fetch_crystal_plates(filter)
 
             # Stop looping when we got the images we expect.
-            if len(records) >= plate_count:
+            if len(models) >= plate_count:
                 break
 
             if time.time() - time0 > timeout:
                 raise RuntimeError(
-                    f"only {len(records)} images out of {plate_count}"
+                    f"only {len(models)} images out of {plate_count}"
                     f" registered within {timeout} seconds"
                 )
             await asyncio.sleep(1.0)
 
-        assert len(records) == plate_count, "plates after mining"
+        assert len(models) == plate_count, "plates after mining"
+
+        # Make sure that the model which came out of the database can be instantiated.
+        specification = {"type": models[0].thing_type}
+        o = CrystalPlateObjects().build_object(specification)
+        assert o.get_well_count() == 288
 
     # ----------------------------------------------------------------------------------------
 

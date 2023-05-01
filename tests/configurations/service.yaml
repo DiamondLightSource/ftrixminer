@@ -39,9 +39,11 @@ ftrixminer_miner_specification_direct_poll:
                 - - 1
                   - 98ab
                   - cm00001-1
+                  - SWISSci_3Drop
                 - - 2
                   - 98ac
                   - cm00001-1
+                  - SWISSci_3Drop
         xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION
 
 # The ftrixminer client/server composite.

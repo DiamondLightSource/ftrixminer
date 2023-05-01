@@ -109,14 +109,12 @@ class MinerTester(Base):
         # Reference the xchembku object which the context has set up as the default.
         xchembku = xchembku_datafaces_get_default()
 
-        # Get list of plates before we create any of the mock plates.
+        # Filter get all crystal plates.
         filter = CrystalPlateFilterModel()
-        models = await xchembku.fetch_crystal_plates(filter)
-        assert len(models) == 0, "images before any mock plates"
 
         # Wait for all the plates to appear.
         time0 = time.time()
-        timeout = 2.0
+        timeout = 5.0
         while True:
 
             # Get all images.

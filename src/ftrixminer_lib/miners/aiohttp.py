@@ -96,20 +96,19 @@ class Aiohttp(Thing, BaseAiohttp):
         """
 
         try:
+            # Don't show pytds (mssql server) debug.
+            logging.getLogger("pytds").setLevel("WARNING")
+
             # Build a local miner for our back-end.
             self.__direct_miner = Miners().build_object(
                 self.specification()["type_specific_tbd"]["direct_miner_specification"]
             )
 
-            logger.info("[COLSHUT] calling self.__direct_miner.activate()")
             # Get the local implementation started.
             await self.__direct_miner.activate()
 
             # ----------------------------------------------
-            logger.info("[COLSHUT] calling BaseAiohttp.activate_coro_base(self)")
             await BaseAiohttp.activate_coro_base(self)
-
-            logger.info("[COLSHUT] returning")
 
         except Exception as exception:
             raise RuntimeError("exception while starting miner server") from exception

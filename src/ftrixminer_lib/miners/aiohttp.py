@@ -69,8 +69,6 @@ class Aiohttp(Thing, BaseAiohttp):
         except Exception as exception:
             logger.exception("exception in miner process", exc_info=exception)
 
-        logger.debug(f"[PIDAL] {callsign(self)} is returning from activate_process")
-
     # ----------------------------------------------------------------------------------------
     def activate_thread(self, loop) -> None:
         """
@@ -96,7 +94,7 @@ class Aiohttp(Thing, BaseAiohttp):
         """
 
         try:
-            # Don't show pytds (mssql server) debug.
+            # Don't show pytds (mssql server) noisy debug.
             logging.getLogger("pytds").setLevel("WARNING")
 
             # Build a local miner for our back-end.
@@ -107,7 +105,6 @@ class Aiohttp(Thing, BaseAiohttp):
             # Get the local implementation started.
             await self.__direct_miner.activate()
 
-            # ----------------------------------------------
             await BaseAiohttp.activate_coro_base(self)
 
         except Exception as exception:
@@ -128,9 +125,7 @@ class Aiohttp(Thing, BaseAiohttp):
         # ----------------------------------------------
         if self.__direct_miner is not None:
             # Disconnect our local dataface connection, i.e. the one which holds the database connection.
-            logger.info("[COLSHUT] awaiting self.__direct_miner.deactivate()")
             await self.__direct_miner.deactivate()
-            logger.info("[COLSHUT] got return from self.__direct_miner.deactivate()")
 
         # ----------------------------------------------
         # Let the base class stop the server listener.

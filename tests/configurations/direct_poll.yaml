@@ -20,11 +20,11 @@ ftrixminer_miner_specification:
       records1:
         - - 1
           - 98ab
-          - cm00001-1
+          - cm00001-1_something#else
           - SWISSci_3Drop
         - - 2
           - 98ac
-          - cm00001-1
+          - cm00001-1_otherstuff
           - SWISSci_3drop
     xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION
   context:

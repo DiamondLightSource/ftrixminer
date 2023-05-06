@@ -38,11 +38,11 @@ ftrixminer_miner_specification_direct_poll:
             records1:
                 - - 1
                   - 98ab
-                  - cm00001-1
+                  - cm00001-1_something#else
                   - SWISSci_3Drop
                 - - 2
                   - 98ac
-                  - cm00001-1
+                  - cm00001-1_otherstuff
                   - SWISSci_3Drop
         xchembku_dataface_specification: *XCHEMBKU_DATAFACE_SPECIFICATION
 

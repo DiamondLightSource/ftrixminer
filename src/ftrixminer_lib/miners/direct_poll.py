@@ -1,11 +1,13 @@
 import asyncio
 import logging
+from pathlib import Path
 from typing import List
 
 import pytds
 from dls_utilpack.callsign import callsign
 from dls_utilpack.explain import explain2
 from dls_utilpack.require import require
+from dls_utilpack.visit import VisitNotFound, get_xchem_subdirectory
 
 # Crystal plate constants.
 from xchembku_api.crystal_plate_objects.constants import TREENODE_NAMES_TO_THING_TYPES
@@ -150,10 +152,29 @@ class DirectPoll(MinerBase):
             thing_type = TREENODE_NAMES_TO_THING_TYPES.get(row[3])
             if thing_type is None:
                 raise RuntimeError(f"programming error: plate type {row[3]} unexpected")
+
+            # Get a proper visit name from the formulatrix's "experiment" tree_node name.
+            # The techs name the experiment tree node like sw30864-12_something,
+            # and the visit is parsed out as the part before the first underscore.
+            formulatrix__experiment__name = str(row[2])
+            try:
+                xchem_subdirectory = get_xchem_subdirectory(
+                    formulatrix__experiment__name
+                )
+                # The xchem_subdirectory comes out like sw30864/sw30864-12.
+                # We only store the actual visit into the database field.
+                visit = Path(xchem_subdirectory).name
+
+            # Completely skip formulatrix plates with names not formatted properly as visits.
+            except VisitNotFound:
+                continue
+
+            # Wrap a model around the attributes.
             crystal_plate_model = CrystalPlateModel(
+                visit=visit,
                 barcode=str(row[1]),
-                visit=str(row[2]),
                 thing_type=thing_type,
+                formulatrix__experiment__name=formulatrix__experiment__name,
                 formulatrix__plate__id=formulatrix__plate__id,
             )
 
@@ -206,7 +227,7 @@ class DirectPoll(MinerBase):
             "SELECT"
             " Plate.ID AS id,"
             " Plate.Barcode AS barcode,"
-            " experiment_node.Name AS visit,"
+            " experiment_node.Name AS experiment,"
             " plate_type_node.Name AS plate_type"
             " FROM Plate"
             " JOIN Experiment ON experiment.ID = plate.experimentID"

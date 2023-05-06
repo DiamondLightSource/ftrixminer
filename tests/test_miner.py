@@ -109,7 +109,7 @@ class MinerTester(Base):
         # Reference the xchembku object which the context has set up as the default.
         xchembku = xchembku_datafaces_get_default()
 
-        # Filter get all crystal plates.
+        # Filter to get all crystal plates.
         filter = CrystalPlateFilterModel()
 
         # Wait for all the plates to appear.
@@ -117,10 +117,10 @@ class MinerTester(Base):
         timeout = 5.0
         while True:
 
-            # Get all images.
+            # Get all the plates.
             models = await xchembku.fetch_crystal_plates(filter)
 
-            # Stop looping when we got the images we expect.
+            # Stop looping when we got the plates we expect.
             if len(models) >= plate_count:
                 break
 
@@ -137,6 +137,12 @@ class MinerTester(Base):
         specification = {"type": models[0].thing_type}
         o = CrystalPlateObjects().build_object(specification)
         assert o.get_well_count() == 288
+
+        # Check the values relating to the visit parsing.
+        assert models[0].visit == "cm00001-1"
+        assert models[0].formulatrix__experiment__name == "cm00001-1_something#else"
+        assert models[1].visit == "cm00001-1"
+        assert models[1].formulatrix__experiment__name == "cm00001-1_otherstuff"
 
     # ----------------------------------------------------------------------------------------
 

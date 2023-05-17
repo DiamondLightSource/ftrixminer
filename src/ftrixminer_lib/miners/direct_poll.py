@@ -174,7 +174,7 @@ class DirectPoll(MinerBase):
                 should_upsert = False
 
             # Completely skip formulatrix plates which don't have visit directories established.
-            except VisitNotFound:
+            except VisitNotFound as exception:
                 logger.warning(
                     f'ignoring plate with formulatrix__experiment__name "{formulatrix__experiment__name}" because {str(exception)}'
                 )

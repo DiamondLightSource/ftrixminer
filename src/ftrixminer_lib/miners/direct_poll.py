@@ -157,6 +157,7 @@ class DirectPoll(MinerBase):
             # The techs name the experiment tree node like sw30864-12_something,
             # and the visit is parsed out as the part before the first underscore.
             formulatrix__experiment__name = str(row[2])
+            should_upsert = True
             try:
                 xchem_subdirectory = get_xchem_subdirectory(
                     formulatrix__experiment__name
@@ -166,23 +167,38 @@ class DirectPoll(MinerBase):
                 visit = Path(xchem_subdirectory).name
 
             # Completely skip formulatrix plates with names not formatted properly as visits.
+            except ValueError as exception:
+                logger.warning(
+                    f'ignoring plate with formulatrix__experiment__name "{formulatrix__experiment__name}" because {str(exception)}'
+                )
+                should_upsert = False
+
+            # Completely skip formulatrix plates which don't have visit directories established.
             except VisitNotFound:
-                continue
+                logger.warning(
+                    f'ignoring plate with formulatrix__experiment__name "{formulatrix__experiment__name}" because {str(exception)}'
+                )
+                should_upsert = False
 
-            # Wrap a model around the attributes.
-            crystal_plate_model = CrystalPlateModel(
-                visit=visit,
-                barcode=str(row[1]),
-                thing_type=thing_type,
-                formulatrix__experiment__name=formulatrix__experiment__name,
-                formulatrix__plate__id=formulatrix__plate__id,
-            )
+            if should_upsert:
+                # Wrap a model around the attributes.
+                crystal_plate_model = CrystalPlateModel(
+                    visit=visit,
+                    barcode=str(row[1]),
+                    thing_type=thing_type,
+                    formulatrix__experiment__name=formulatrix__experiment__name,
+                    formulatrix__plate__id=formulatrix__plate__id,
+                )
 
-            # Add plate to our database.
-            # I don't worry about performance hit of adding plates one by one with upsert
-            # since new plates don't get added very often.
-            await self.__xchembku.upsert_crystal_plates([crystal_plate_model])
+                # Add plate to our database.
+                # I don't worry about performance hit of adding plates one by one with upsert
+                # since new plates don't get added very often.
+                await self.__xchembku.upsert_crystal_plates([crystal_plate_model])
 
+            # Remember the latest plate id that we have examined.
+            # After a restart  we lose the instance variable,
+            # so we will possibly re-examine those after the final actual upsert,
+            # but that's not a lot of work.
             self.__latest_formulatrix__plate__id = formulatrix__plate__id
 
     # ----------------------------------------------------------------------------------------

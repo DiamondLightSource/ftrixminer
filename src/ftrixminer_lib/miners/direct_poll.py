@@ -61,7 +61,8 @@ class DirectPoll(MinerBase):
         self.__keep_ticking = True
         self.__tick_future = None
 
-        self.__latest_formulatrix__plate__id = 0
+        self.__latest_formulatrix__plate__ids = ["0"]
+        self.__query_count = 0
 
     # ----------------------------------------------------------------------------------------
     async def activate(self) -> None:
@@ -82,13 +83,14 @@ class DirectPoll(MinerBase):
         # Get latest plate we already have in the database.
         # This allows us to query mssql for just plates that are newer.
         crystal_plate_models = await self.__xchembku.fetch_crystal_plates(
-            CrystalPlateFilterModel(limit=1, direction=-1),
+            CrystalPlateFilterModel(limit=100, direction=-1),
             why="latest plate we already have in the database",
         )
-        if len(crystal_plate_models) > 0:
-            self.__latest_formulatrix__plate__id = crystal_plate_models[
-                0
-            ].formulatrix__plate__id
+
+        for crystal_plate_model in crystal_plate_models:
+            self.__latest_formulatrix__plate__ids.append(
+                str(crystal_plate_model.formulatrix__plate__id)
+            )
 
         # Poll periodically.
         self.__tick_future = asyncio.get_event_loop().create_task(self.tick())
@@ -199,7 +201,7 @@ class DirectPoll(MinerBase):
             # After a restart  we lose the instance variable,
             # so we will possibly re-examine those after the final actual upsert,
             # but that's not a lot of work.
-            self.__latest_formulatrix__plate__id = formulatrix__plate__id
+            self.__latest_formulatrix__plate__ids.append(str(formulatrix__plate__id))
 
     # ----------------------------------------------------------------------------------------
     async def query(self) -> List[List]:
@@ -241,23 +243,31 @@ class DirectPoll(MinerBase):
         # Get all xchem barcodes and the associated experiment name.
         sql = (
             "SELECT"
-            " Plate.ID AS id,"
-            " Plate.Barcode AS barcode,"
-            " experiment_node.Name AS experiment,"
-            " plate_type_node.Name AS plate_type"
-            " FROM Plate"
-            " JOIN Experiment ON experiment.ID = plate.experimentID"
-            " JOIN TreeNode AS experiment_node ON experiment_node.ID = Experiment.TreeNodeID"
-            " JOIN TreeNode AS plate_type_node ON plate_type_node.ID = experiment_node.ParentID"
-            " JOIN TreeNode AS projects_folder_node ON projects_folder_node.ID = plate_type_node.ParentID"
-            f" WHERE Plate.ID > {self.__latest_formulatrix__plate__id}"
-            " AND projects_folder_node.Name = 'xchem'"
-            f" AND plate_type_node.Name IN ({',' .join(treenode_names)})"
+            "\n  Plate.ID AS id,"
+            "\n  Plate.Barcode AS barcode,"
+            "\n  experiment_node.Name AS experiment,"
+            "\n  plate_type_node.Name AS plate_type"
+            "\nFROM Plate"
+            "\nJOIN Experiment ON experiment.ID = plate.experimentID"
+            "\nJOIN TreeNode AS experiment_node ON experiment_node.ID = Experiment.TreeNodeID"
+            "\nJOIN TreeNode AS plate_type_node ON plate_type_node.ID = experiment_node.ParentID"
+            "\nJOIN TreeNode AS projects_folder_node ON projects_folder_node.ID = plate_type_node.ParentID"
+            f"\nWHERE Plate.ID > {self.__latest_formulatrix__plate__ids[-1]}"
+            "\n  AND projects_folder_node.Name = 'xchem'"
+            f"\n  AND plate_type_node.Name IN ({',' .join(treenode_names)})"
+            f"\n  AND Plate.ID NOT IN ({', '.join(self.__latest_formulatrix__plate__ids)})"
         )
 
         cursor = connection.cursor()
         cursor.execute(sql)
         rows = cursor.fetchall()
+
+        if self.__query_count % 60 == 0:
+            logger.debug(
+                f"query #{self.__query_count}. got {len(rows)} rows from\n{sql}"
+            )
+
+        self.__query_count += 1
 
         return rows
 
@@ -273,7 +283,7 @@ class DirectPoll(MinerBase):
         # Keep only records that haven't been queried before.
         new_records = []
         for record in records:
-            if record[0] > self.__latest_formulatrix__plate__id:
+            if record[0] not in self.__latest_formulatrix__plate__ids:
                 new_records.append(record)
 
         return new_records

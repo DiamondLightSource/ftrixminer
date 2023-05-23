@@ -264,7 +264,7 @@ class DirectPoll(MinerBase):
 
         if self.__query_count % 60 == 0:
             logger.debug(
-                f"query #{self.__query_count}. got {len(rows)} rows from\n{sql}"
+                f"[FTRIXMINER POLL] query #{self.__query_count}. got {len(rows)} rows from\n{sql}"
             )
 
         self.__query_count += 1
